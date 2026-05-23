@@ -5,12 +5,12 @@
 -- by @lanavienrose
 -- ============================================
 
-local P = "\27[35m"  -- purple
-local C = "\27[36m"  -- cyan
-local G = "\27[32m"  -- green
-local R = "\27[31m"  -- red
-local D = "\27[2m"   -- dim
-local X = "\27[0m"   -- reset
+local P = "\27[1;96m" -- bold bright cyan (headers)
+local C = "\27[93m"   -- bright yellow (state values)
+local G = "\27[1;92m" -- bold bright green (success)
+local R = "\27[1;91m" -- bold bright red (fail)
+local D = "\27[97m"   -- bright white (info, was dim)
+local X = "\27[0m"    -- reset
 
 local function line() print(string.rep("-",49)) end
 local function out(s) io.write(s.."\n"); io.flush() end
@@ -30,7 +30,7 @@ local function sucmd(cmd)
 end
 
 local function ask(q)
-    io.write(P.."  "..q..X.."\n  > "); io.flush()
+    io.write("\27[93m  "..q.."\27[0m\n\27[1;96m  > \27[0m"); io.flush()
     return io.read("*l")
 end
 
@@ -201,4 +201,3 @@ out(D.."  IMPORTANT: also look at the actual")
 out("  roblox screen now. tell me if it is")
 out("  in server B, server A, or the lobby."..X)
 line()
-
