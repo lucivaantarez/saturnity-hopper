@@ -1,7 +1,7 @@
 -- ============================================
 -- SATURNITY HOP TEST  (Android / Termux)
--- time-based + eye-confirmed. no activity
--- detection (roblox hides it on this build).
+-- width-aware: wraps to real terminal columns
+-- so split-screen / high-dpi never breaks.
 -- by @lanavienrose
 -- ============================================
 
@@ -12,101 +12,109 @@ local R = "\27[1;91m"
 local D = "\27[97m"
 local X = "\27[0m"
 
-local function line() io.write(string.rep("-",40).."\n") end
-local function out(s) io.write(s.."\n"); io.flush() end
+-- detect real terminal width
+local function detect_w()
+    local w
+    local h = io.popen("stty size 2>/dev/null")
+    if h then
+        local s = h:read("*a") or ""; h:close()
+        w = tonumber(s:match("%d+%s+(%d+)"))
+    end
+    if not w then
+        local h2 = io.popen("tput cols 2>/dev/null")
+        if h2 then w = tonumber(h2:read("*a")); h2:close() end
+    end
+    if not w then w = tonumber(os.getenv("COLUMNS") or "") end
+    if not w or w < 12 then w = 24 end
+    return w
+end
+local W = detect_w()
+
+local function line() io.write(string.rep("-", W).."\n"); io.flush() end
+
+-- word-wrap plain text to W, then color each line
+local function cp(col, text)
+    local lines, cur = {}, ""
+    for word in text:gmatch("%S+") do
+        if #cur + #word + (cur=="" and 0 or 1) > W then
+            lines[#lines+1] = cur; cur = word
+        else
+            cur = (cur=="") and word or cur.." "..word
+        end
+    end
+    if cur ~= "" then lines[#lines+1] = cur end
+    if #lines == 0 then lines[1] = "" end
+    for _,l in ipairs(lines) do io.write(col..l..X.."\n") end
+    io.flush()
+end
+
 local function su(cmd)
     os.execute("su -c '"..cmd:gsub("'","'\\''").."' >/dev/null 2>&1")
 end
 local function ask(q)
-    io.write("\27[93m  "..q.."\27[0m\n\27[1;96m  > \27[0m"); io.flush()
+    cp(C, q); io.write("\27[1;96m> \27[0m"); io.flush()
     return io.read("*l")
 end
-local function pause(q)
-    io.write("\27[1;92m  "..q.."\27[0m"); io.flush()
-    io.read("*l")
-end
 local function sleep(n) os.execute("sleep "..n) end
-
 local function send_url(url, pkg)
     su("am start --user 0 -a android.intent.action.VIEW"
         .." -d \""..url.."\" -p "..pkg)
 end
 local function countdown(secs, label)
     for i=secs,1,-1 do
-        io.write("\r\27[97m  "..label.." "..i.."s   \27[0m")
+        local s = label.." "..i.."s"
+        if #s > W then s = s:sub(1, W) end
+        io.write("\r"..D..s..string.rep(" ", W-#s)..X)
         io.flush(); sleep(1)
     end
-    io.write("\r"..string.rep(" ",38).."\r"); io.flush()
+    io.write("\r"..string.rep(" ", W).."\r"); io.flush()
 end
 
 os.execute("clear")
 line()
-out("  "..P.."[ SATURNITY HOP TEST ]"..X)
+cp(P, "[ SATURNITY HOP TEST ]")
 line()
-out(D.."  join server A, then send server B")
-out("  while in-game (no force-stop) and")
-out("  see if it teleports."..X)
+cp(D, "no typing after start. watch the clone screen.")
+cp(D, "term width = "..W)
 line()
 
 local pkg = ask("package (e.g. com.roblox.clienv)")
-if not pkg or pkg=="" then out(R.."  cancelled."..X) return end
+if not pkg or pkg=="" then cp(R,"cancelled.") return end
 local linkA = ask("server A full link")
-if not linkA or linkA=="" then out(R.."  cancelled."..X) return end
+if not linkA or linkA=="" then cp(R,"cancelled.") return end
 local linkB = ask("server B link (different)")
-if not linkB or linkB=="" then out(R.."  cancelled."..X) return end
+if not linkB or linkB=="" then cp(R,"cancelled.") return end
+local lw = tonumber(ask("server A load wait sec (def 40)")) or 40
 
-out("")
 line()
-out("  "..P.."PHASE 1  join server A"..X)
+cp(P, "STARTING IN 5s")
+cp(D, "switch to the clone and watch it")
 line()
-out(D.."  opening roblox..."..X)
+countdown(5, "starting")
+
+cp(D, "[1] opening roblox")
 su("am start --user 0 -n "..pkg
     .."/com.roblox.client.startup.ActivitySplash")
-countdown(8, "loading roblox")
-out(D.."  sending server A link..."..X)
+sleep(6)
+cp(D, "[2] sending server A link")
 send_url(linkA, pkg)
-out("")
-pause("when you SEE server A loaded, press ENTER")
+countdown(lw, "loading A")
+cp(G, ">>> in server A now <<<")
+sleep(2)
 
-out("")
-line()
-out("  "..P.."PHASE 2  send B (no force-stop)"..X)
-line()
-out(D.."  sending server B link now..."..X)
+cp(R, "*** WATCH: sending server B ***")
+cp(D, "does the game RELOAD next 30s?")
 send_url(linkB, pkg)
 countdown(30, "watching")
-out("")
-out(D.."  look at the roblox screen now."..X)
-out("")
-local a = ask("where are you?  b / a / l / c")
-out("")
+
 line()
-out("  "..P.."RESULT"..X)
+cp(P, "DONE - what did you see?")
 line()
-if a == "b" then
-    out("  "..G.."TELEPORT WORKS, NO FORCE-STOP!"..X)
-    out(D.."  in-game link teleports straight to")
-    out("  the next server. fast blitz possible."..X)
-elseif a == "a" then
-    out("  "..R.."NO TELEPORT"..X)
-    out(D.."  in-game link was ignored, stayed in")
-    out("  server A. blitz needs force-stop."..X)
-elseif a == "l" then
-    out("  "..R.."KICKED TO LOBBY"..X)
-    out(D.."  link dumped it to menu instead of")
-    out("  teleporting. blitz needs force-stop."..X)
-elseif a == "c" then
-    out("  "..R.."CHOOSER APPEARED"..X)
-    out(D.."  -p was ignored. need another way to")
-    out("  target the clone."..X)
-else
-    out("  "..C.."unknown answer: "..tostring(a)..X)
-    out(D.."  tell me what you saw on screen."..X)
-end
+cp(D, "if game RELOADED (loading/play screen again):")
+cp(G, "  teleport works, no force-stop")
+cp(D, "if it STAYED, no reload:")
+cp(R, "  no teleport, needs force-stop")
 line()
-out(D.."  reminder:")
-out("    b = in server B (different world)")
-out("    a = still server A")
-out("    l = lobby / menu / play screen")
-out("    c = 'open with' popup"..X)
+cp(D, "tell saturnity which one.")
 line()
+ 
