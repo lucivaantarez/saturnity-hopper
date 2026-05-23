@@ -89,7 +89,7 @@ out("  without needing force-stop."..X)
 out("")
 line()
 
-local pkg = ask("roblox package (e.g. com.roblox.clientb)")
+local pkg = ask("roblox package (e.g. com.roblox.clienv)")
 if not pkg or pkg=="" then out(R.."  cancelled."..X); return end
 
 local codeA = ask("server A code (first server)")
