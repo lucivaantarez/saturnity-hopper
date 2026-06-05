@@ -13,6 +13,7 @@
             Enabled = false, -- Start auto trading on load
             AutoAcceptTrades = true, -- Auto accept incoming trade requests
             AutoLeaveAfterTrades = true, -- Leave/shutdown when all trades complete
+            LeaveDelay = 5, -- Seconds to wait after trades complete before leaving
             Usernames = {}, -- Players to trade with e.g. {"player1", "player2"}
             TradeMode = "all", -- "all" = trade everything in categories, "specific" = only Items list
             Categories = {"pets", "toys", "food", "transport", "gifts", "stickers", "pet_accessories"}, -- Categories to include
@@ -58,7 +59,7 @@
             },
         },
         Settings = {
-            AutoShowUI = false, -- Show UI on script load (false = hidden, use toggle key)
+            AutoShowUI = true, -- Show UI on script load (false = hidden, use toggle key)
             Theme = "Dark", -- UI theme: "Dark", "Midnight", "Amoled"
             ToggleKey = "RightShift", -- Key to toggle UI visibility
         },
