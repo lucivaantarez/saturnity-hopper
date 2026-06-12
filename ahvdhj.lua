@@ -12,7 +12,7 @@
         AutoTrade = {
             Enabled = false, -- Start auto trading on load
             AutoAcceptTrades = true, -- Auto accept trade requests sent TO you
-            AutoLeaveAfterTrades = true, -- Leave/kick once every target has nothing left to receive
+            AutoLeaveAfterTrades = false, -- Leave/kick once every target has nothing left to receive
             LeaveDelay = 5, -- Seconds to wait after trades finish before leaving
             Usernames = {}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
             TradeMode = "all", -- "all" = send everything in Categories | "specific" = only the Items list
@@ -97,10 +97,10 @@
             },
         },
         Settings = {
-            AutoShowUI = false, -- Show UI on script load (false = hidden, use toggle key)
+            AutoShowUI = true, -- Show UI on script load (false = hidden, use toggle key)
             Theme = "Dark", -- UI theme: "Dark", "Midnight", "Amoled"
             ToggleKey = "RightShift", -- Key to toggle UI visibility
         },
     };
 getgenv().scriptkey="PWUyrezPKtBiJjNHFgMYfmfDOKCZZmHi"
-loadstring(game:HttpGet("https://zekehub.com/scripts/AdoptMe/Utility.lua"))()loadstring(game:HttpGet("https://zekehub.com/scripts/AdoptMe/Utility.lua"))()
+loadstring(game:HttpGet("https://zekehub.com/scripts/AdoptMe/Utility.lua"))()
