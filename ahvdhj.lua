@@ -97,7 +97,7 @@
             },
         },
         Settings = {
-            AutoShowUI = true, -- Show UI on script load (false = hidden, use toggle key)
+            AutoShowUI = false, -- Show UI on script load (false = hidden, use toggle key)
             Theme = "Dark", -- UI theme: "Dark", "Midnight", "Amoled"
             ToggleKey = "RightShift", -- Key to toggle UI visibility
         },
