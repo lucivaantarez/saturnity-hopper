@@ -10,7 +10,7 @@
         SelectedPets = {"summer_2026_river_otter", "summer_2026_irish_setter", "journey_2026_pilot_gull", "journey_2026_bison", "summer_2026_lake_monster", "summer_2026_stygian_owl"},
         },
         AutoTrade = {
-            Enabled = true, -- Start auto trading on load
+            Enabled = false, -- Start auto trading on load
             AutoAcceptTrades = true, -- Auto accept trade requests sent TO you
             AutoLeaveAfterTrades = false, -- Leave/kick once every target has nothing left to receive
             LeaveDelay = 5, -- Seconds to wait after trades finish before leaving
