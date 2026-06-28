@@ -4,10 +4,10 @@
             UseAllOnAll = false, -- Use all potions on all pets (highest age first)
             SelectedPets = {}, -- Specific pet IDs to level e.g. {"dog", "cat"}
         },
-        AutoNeon = {
-            Enabled = false, -- Start auto neon fusing on load
-            MakeMega = false, -- Make mega neons instead of regular neons
-            SelectedPets = {}, -- Specific pet IDs to fuse e.g. {"dog", "cat"}
+            AutoNeon = {
+        Enabled = true, -- Enable auto neon/mega fusion
+        MakeMega = true, -- Fuse neons into mega neons
+        SelectedPets = {"summer_2026_river_otter", "summer_2026_irish_setter", "journey_2026_pilot_gull", "journey_2026_bison", "summer_2026_lake_monster" "summer_2026_stygian_owl"},
         },
         AutoTrade = {
             Enabled = true, -- Start auto trading on load
