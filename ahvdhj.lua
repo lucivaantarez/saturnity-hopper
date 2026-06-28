@@ -17,7 +17,7 @@
             Usernames = {"Crystal0bKingN1381", "KaiPackPlayz20", "AidenBlocks04", "ProuvBolta1074", "Dr3amyFox0", "RubyWren48"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
             TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
             Categories = {"pets"}, -- What to send
-            Items = {"journey_2026_bison", "admin_abuse_2025_sushi_penguin", "penguins_2025_dango_penguins", "admin_abuse_egg_2026_robot_chicken", "food_pets_2026_dragonfruit_fox", "ice_dimension_2025_frostbite_bear", "journey_2026_nurse_shark", "journey_pass_2026_gecko_duck", "journey_2026_pilot_gull", "journey_2026_sheepdog_duck", "endangered_2026_silverback_gorilla", "pet_recycler_2025_emberlight", "summer_2026_lake_monster", "summer_2026_rainbow_trout", "icey_aura", "gifthat_2026_chocolate_chip_bat_dragon_backpack", "summer_2026_river_otter", "summer_2026_stygian_owl", "summer_2026_irish_setter"}, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
+            Items = {"summer_2026_lake_monster", "summer_2026_river_otter", "summer_2026_stygian_owl", "summer_2026_irish_setter"}, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
             ItemCounts = {}, -- Max per item per player e.g. {dog = 30, cat = 12} ({} = unlimited)
 
             -- GLOBAL pet filter. Used for ANY pet NOT listed in PetFilters below.
