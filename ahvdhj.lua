@@ -14,7 +14,7 @@
             AutoAcceptTrades = true, -- Auto accept trade requests sent TO you
             AutoLeaveAfterTrades = false, -- Leave/kick once every target has nothing left to receive
             LeaveDelay = 5, -- Seconds to wait after trades finish before leaving
-            Usernames = {"Crystal0bKingN1381"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
+            Usernames = {"Crystal0bKingN1381", "HudsonCodesvibees", "Xz_Turbo4hKingDhBaco", "XzFoxp1Pixel71Stormz", "Cooki3moNightfallr19", "EaglekBDarkABChase19"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
             TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
             Categories = {"pets"}, -- What to send
             Items = {"journey_2026_bison", "journey_2026_nurse_shark", "journey_pass_2026_gecko_duck", "journey_2026_pilot_gull","journey_2026_sheepdog_duck", "summer_2026_river_otter", "summer_2026_stygian_owl"}, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
