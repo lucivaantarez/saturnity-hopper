@@ -168,7 +168,10 @@ local function install_accept_hook()
     -- For a trade_request we short-circuit with a resolved promise carrying
     -- "Accept" — exactly what the waiting TradeApp handler expects.
     if not DialogApp.__autotrade_hooked then
-        local Promise = load("Promise")
+        -- Adopt Me's promise module is "package:Promise" (NOT "Promise")
+        local Promise
+        pcall(function() Promise = load("package:Promise") end)
+        if not Promise then pcall(function() Promise = load("Promise") end) end
         local cls = getmetatable(DialogApp)
         cls = cls and cls.__index
         if cls and cls.dialog and Promise then
@@ -178,13 +181,14 @@ local function install_accept_hook()
                     mark_activity()
                     log("auto-accepting trade request (hooked dialog)")
                     local p = Promise.resolve("Accept")
-                    -- match the original's yields behaviour
                     if opts.yields or opts.yields == nil then return p:expect() end
                     return p
                 end
                 return orig(self, opts)
             end
             DialogApp.__autotrade_hooked = true
+        elseif cls and cls.dialog and not Promise then
+            log("WARN: promise module not found; relying on open-dialog force-answer only")
         end
     end
 
@@ -195,18 +199,25 @@ local function install_accept_hook()
     return DialogApp.__autotrade_hooked == true
 end
 
--- If a trade-request dialog is ALREADY on screen when we start (your bot
--- sends before the script executes), the hook above only catches FUTURE
--- dialogs. This force-answers the one already open by firing the dialog's
--- own response signal with "Accept" for the current ticket.
+-- If a trade-request dialog is ALREADY waiting when we start (your bot sends
+-- before the script executes), the hook above only catches FUTURE dialogs.
+-- A waiting dialog shows up as ticket_count > completed_ticket (is_dialog_open
+-- is unreliable — it reads false even while a request is on screen). The
+-- in-flight ticket is completed_ticket + 1; push "Accept" into it.
+local last_forced_ticket = 0
 local function clear_open_request()
     if not UIManager or not UIManager.apps then return end
     local D = UIManager.apps.DialogApp
-    if not D or not D.is_dialog_open then return end
+    if not D or not D.force_response_signal then return end
+    local count = D.ticket_count or 0
+    local done  = D.completed_ticket or 0
+    if count <= done then return end                 -- nothing waiting
+    local ticket = done + 1
+    if ticket == last_forced_ticket then return end  -- don't spam the same one
+    last_forced_ticket = ticket
     pcall(function()
-        -- the in-flight ticket is completed_ticket + 1; push "Accept" into it
-        D.force_response_signal:Fire(D.completed_ticket + 1, table.pack("Accept"))
-        log("force-answered already-open dialog")
+        D.force_response_signal:Fire(ticket, table.pack("Accept"))
+        log("force-answered waiting dialog (ticket " .. ticket .. ")")
     end)
 end
 
