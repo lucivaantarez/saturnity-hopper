@@ -57,7 +57,7 @@
             PetFilters = {
             summer_2026_lake_monster = {regular = {}, neon = {}},
             summer_2026_river_otter = {regular = {}, neon = {}},
-            summer_2026_irish_setter = {regular = {}. neon = {}},
+            summer_2026_irish_setter = {regular = {}, neon = {}},
             },
 
             -- Manual Trade-tab filters only (do NOT affect auto trade above)
