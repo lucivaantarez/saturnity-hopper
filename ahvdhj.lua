@@ -55,11 +55,8 @@
             --   frost_dragon = { regular = {4,5,6}, neon = {6}, mega = {} }
             --       -> teen/post-teen/FG regular, FG neon, all mega
             PetFilters = {
-            summer_2026_lake_monster = {regular = {}, neon = {}},
-            summer_2026_river_otter = {regular = {}, neon = {}},
-            summer_2026_irish_setter = {regular = {}, neon = {}},
+                -- example_pet = { regular = {6}, neon = {} },
             },
-
             -- Manual Trade-tab filters only (do NOT affect auto trade above)
             Filters = {
                 Kind = "ALL", -- Show only one item ID, "ALL" = off
