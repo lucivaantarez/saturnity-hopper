@@ -1,109 +1,349 @@
-  getgenv().Utility = {
-        AutoPotion = {
-            Enabled = false, -- Start auto potion leveling on load
-            UseAllOnAll = false, -- Use all potions on all pets (highest age first)
-            SelectedPets = {}, -- Specific pet IDs to level e.g. {"dog", "cat"}
-        },
-            AutoNeon = {
-        Enabled = true, -- Enable auto neon/mega fusion
-        MakeMega = true, -- Fuse neons into mega neons
-        SelectedPets = {"summer_2026_river_otter", "summer_2026_irish_setter", "journey_2026_pilot_gull", "journey_2026_bison", "summer_2026_lake_monster", "summer_2026_stygian_owl"},
-        },
-        AutoTrade = {
-            Enabled = true, -- Start auto trading on load
-            AutoAcceptTrades = true, -- Auto accept trade requests sent TO you
-            AutoLeaveAfterTrades = false, -- Leave/kick once every target has nothing left to receive
-            LeaveDelay = 5, -- Seconds to wait after trades finish before leaving
-            Usernames = {"Crystal0bKingN1381", "KaiPackPlayz20", "AidenBlocks04", "ProuvBolta1074", "Dr3amyFox0", "RubyWren48"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
-            TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
-            Categories = {"pets"}, -- What to send
-            Items = {"summer_2026_lake_monster", "summer_2026_river_otter", "summer_2026_stygian_owl", "summer_2026_irish_setter"}, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
-            ItemCounts = {}, -- Max per item per player e.g. {dog = 30, cat = 12} ({} = unlimited)
+--[[=====================================================================
+    adm_autotrade.lua  —  Adopt Me auto-trade (Delta)
+    For moving your own items between your own accounts.
 
-            -- GLOBAL pet filter. Used for ANY pet NOT listed in PetFilters below.
-            GlobalPetFilter = {
-                Versions = {}, -- {} = all versions | or pick any of {"regular", "neon", "mega"}
-                Ages = {}, -- {} = all ages | or pick any of {1,2,3,4,5,6} (6 = full grown). Mega ignores ages
-                -- EXAMPLE - neon full growns + regular full growns, no mega:
-                --   Versions = {"regular", "neon"}, Ages = {6}
-            },
+    Everything is controlled from the CONFIG block below. Each feature has
+    its own on/off, plus a master on/off. Edit, push to GitHub, done.
 
-            -- PER-PET FILTER. Lets you set exact rules for specific pets.
-            -- Any pet listed here IGNORES GlobalPetFilter completely (only these rules apply to it).
-            --
-            -- FORMAT:  pet_id = { version = { ages } }
-            --   version  -> "regular", "neon" or "mega"
-            --   ages     -> {} = all ages | or pick from {1,2,3,4,5,6}
-            --               1=Newborn 2=Junior 3=Pre-Teen 4=Teen 5=Post-Teen 6=Full Grown
-            --
-            -- RULES:
-            --   - a version you DON'T list = that version is NOT traded for this pet
-            --   - {} after a version = trade ALL ages of that version
-            --   - {6} after a version = trade only full grown of that version
-            --   - mega ALWAYS ignores ages (mega has no age), so just use mega = {}
-            --
-            -- EXAMPLES:
-            --   turtle = { mega = {} }
-            --       -> only mega turtles. regular + neon turtles NOT traded (not listed)
-            --
-            --   dog = { regular = {6}, neon = {} }
-            --       -> full grown regular dogs + ALL neon dogs. mega dogs NOT traded
-            --
-            --   shadow_dragon = { neon = {6}, mega = {} }
-            --       -> full grown neon shadows + all mega shadows. regular NOT traded
-            --
-            --   frost_dragon = { regular = {4,5,6}, neon = {6}, mega = {} }
-            --       -> teen/post-teen/FG regular, FG neon, all mega
-            PetFilters = {
-            summer_2026_lake_monster = {regular = {}, neon = {}, mega = {}},
-            summer_2026_river_otter = {regular = {}, neon = {}, mega = {}},
-            summer_2026_irish_setter = {regular = {}, neon = {}, mega = {}},
-            summer_2026_stygian_owl = {regular = {}, neon = {}, mega = {}},
-            },
+    SECTIONS
+      1. CONFIG          — all toggles + settings (the only part you edit)
+      2. SETUP           — loads game modules once
+      3. FORCE SETTINGS  — forces Trading -> Everyone so bots can invite you
+      4. AUTO-ACCEPT     — auto-answers the game's own trade-request dialog
+      5. TRADE DRIVER    — accept -> confirm through to completion
+      6. IDLE WATCHDOG   — kick or rehop if no trade for a while
+      7. MAIN LOOP       — ties it together with a crash-proof watchdog
+=======================================================================]]
 
-            -- Manual Trade-tab filters only (do NOT affect auto trade above)
-            Filters = {
-                Kind = "ALL", -- Show only one item ID, "ALL" = off
-                Type = "ALL", -- "ALL" / "regular" / "neon" / "mega"
-                Rarity = "ALL", -- "ALL" / "common" / "uncommon" / "rare" / "ultra_rare" / "legendary"
-                Search = "", -- Text search, comma separated e.g. "dog, cat, buffalo"
-            },
-        },
-        AutoOpen = {
-            Enabled = false, -- Start auto opening on load
-            Items = {}, -- Item IDs to open e.g. {"gift_box", "cracked_egg"}
-            OpenDelay = 1, -- Seconds between each open (0.5 - 3)
-        },
-       Shop = {
-            Enabled = false, -- Auto buy items on load
-            Items = {}, -- Item IDs to auto buy e.g. {"cracked_egg", "hot_dog_stand"}
-            BuyQuantity = 1, -- How many to buy per purchase (1, 5, 10, 25, 50, 100)
-            BuyDelay = 1, -- Seconds between purchases (0.5 - 3)
-        },
-        AccountManager = {
-            Enabled = false,
-            Tool = "none", -- "yummy", "farmsync", "farmerv5"
-            Yummy = {
-                Action = "completed",
-                Reason = "Done",
-            },
-            FarmSync = {
-                Action = "completed",
-                FromFolderId = "",
-                ToFolderId = "",
-                ChangeWithoutReplacement = false,
-                ConfigId = nil,
-                ApiKey = "",
-            },
-            FarmerV5 = {
-                ApiKey = "", -- FarmerV5 API key (bearer token)
-            },
-        },
-        Settings = {
-            AutoShowUI = false, -- Show UI on script load (false = hidden, use toggle key)
-            Theme = "Dark", -- UI theme: "Dark", "Midnight", "Amoled"
-            ToggleKey = "RightShift", -- Key to toggle UI visibility
-        },
-    };
-getgenv().scriptkey="PWUyrezPKtBiJjNHFgMYfmfDOKCZZmHi"
-loadstring(game:HttpGet("https://zekehub.com/scripts/AdoptMe/Utility.lua"))()
+--[[=====================================================================
+    1. CONFIG  —  THE ONLY PART YOU NEED TO EDIT
+=======================================================================]]
+local CONFIG = {
+
+    MASTER_ENABLED = true,        -- master on/off for the entire script
+
+    FORCE_SETTINGS = {
+        enabled = true,           -- force Trading/Give -> "Everyone"
+        also_force_giving = true, -- also force give_item_requests (gifting)
+    },
+
+    AUTO_ACCEPT = {
+        enabled = true,           -- auto-accept requests + drive trades
+        poll = 0.4,               -- seconds between checks
+        refire_every = 1.0,       -- re-send accept/confirm at most this often
+    },
+
+    IDLE_WATCHDOG = {
+        enabled = false,          -- leave the server when idle
+        idle_seconds = 120,       -- no trade for this long -> act
+        mode = "rehop",           -- "rehop" (fresh server) or "kick" (leave)
+    },
+
+    WEBHOOK = {
+        enabled = true,          -- Discord webhook on completed trade
+        url = "https://discord.com/api/webhooks/1481617340247576729/oNNhsQuK_3MoXArfADV6fv5_xk4nIuxMWPCarj5c-_fw6nav2BtOM60xh5232tegePUm",                 -- your Discord webhook URL
+        report = "received",      -- "received" / "given" / "both"
+    },
+
+    DEBUG = true,                 -- print status to the Delta console
+}
+
+--[[=====================================================================
+    2. SETUP
+=======================================================================]]
+local function log(...) if CONFIG.DEBUG then print("[autotrade]", ...) end end
+
+if not CONFIG.MASTER_ENABLED then
+    log("MASTER_ENABLED = false — script is off")
+    return
+end
+
+local Players         = game:GetService("Players")
+local TeleportService = game:GetService("TeleportService")
+local LocalPlayer     = Players.LocalPlayer
+
+local Fsys = require(game.ReplicatedStorage:WaitForChild("Fsys"))
+local load = Fsys.load
+
+local UIManager, SettingsHelper, SettingsDB, KindDB
+pcall(function()
+    UIManager      = load("UIManager")
+    SettingsHelper = load("SettingsHelper")
+    SettingsDB     = require(game.ReplicatedStorage.ClientDB.SettingsDB)
+    KindDB         = load("KindDB")   -- kind -> display name
+end)
+
+-- idle state (declared early so the accept hook + driver can use it)
+local last_activity = os.clock()
+local function mark_activity() last_activity = os.clock() end
+
+--[[=====================================================================
+    3. FORCE SETTINGS  —  Trading -> Everyone (saves to server immediately)
+=======================================================================]]
+local function force_everyone(id)
+    pcall(function()
+        local def = SettingsDB.by_id[id]
+        if not def then return end
+        local idx = table.find(def.element_options.choices, "Everyone")
+        if not idx then return end
+        SettingsHelper.set_setting_client({ setting_id = id, value = idx })
+        log("setting", id, "-> Everyone")
+    end)
+end
+
+local function force_trade_settings()
+    if not CONFIG.FORCE_SETTINGS.enabled then return end
+    force_everyone("trade_requests")
+    if CONFIG.FORCE_SETTINGS.also_force_giving then
+        force_everyone("give_item_requests")
+    end
+end
+
+--[[=====================================================================
+    4. AUTO-ACCEPT  —  auto-answer Adopt Me's own trade-request dialog
+       We let the game's native accept path run (it does the real
+       InvokeServer + the trade-start handshake that opens the window).
+       We just (a) stop it auto-declining on join, (b) answer its dialog
+       with "Accept", (c) skip the suspicious-captcha / scam popups so
+       nothing can hang. Returns true once the dialog hook is in place.
+=======================================================================]]
+-- Neutralize every blocking popup in the trade flow on the TradeApp instance.
+-- All are method calls (self:method()), so instance overrides shadow the class.
+local function patch_trade_app(app)
+    if not app or app.__autotrade_patched then return end
+    -- suspicious-player captcha ("not your friend!")
+    app._confirm_player_if_suspicious = function() return true end
+    -- unbalanced-trade warnings ("seems unbalanced", "BANNABLE!", victim warning)
+    app._evaluate_trade_fairness     = function() end
+    app._show_scam_perpetrator_warning = function() end
+    app._show_scam_victim_warning      = function() end
+    app._show_experimental_warning     = function() end
+    app.show_scam_warning              = function() end
+    -- pet-paint-will-be-cleared confirm
+    app._confirm_clear_colored_pets    = function() end
+    app.__autotrade_patched = true
+    log("trade warnings neutralized")
+end
+
+local function install_accept_hook()
+    if not CONFIG.AUTO_ACCEPT.enabled then return false end
+    if not UIManager then return false end
+
+    local apps = UIManager.apps
+    if not apps then return false end
+
+    -- (a) don't let the game auto-decline before showing the dialog
+    pcall(function() load("MinigameForcedState").can_receive_invites = function() return true end end)
+    pcall(function() load("TradeExcluder").is_player_excluded = function() return false end end)
+
+    -- (b) auto-answer the "trade_request" dialog with Accept
+    local DialogApp = apps.DialogApp
+    if not DialogApp then return false end
+    if not DialogApp.__autotrade_hooked then
+        local orig = DialogApp.dialog
+        DialogApp.dialog = function(self, opts)
+            if opts and opts.handle == "trade_request" then
+                mark_activity()
+                log("auto-accepting trade request dialog")
+                return "Accept"
+            end
+            return orig(self, opts)
+        end
+        DialogApp.__autotrade_hooked = true
+    end
+
+    -- (c) neutralize suspicious-captcha, scam warnings, unbalanced warnings, etc.
+    local TradeApp = apps.TradeApp
+    if TradeApp then patch_trade_app(TradeApp) end
+
+    return true
+end
+
+--[[=====================================================================
+    8. WEBHOOK  —  Discord notify on completed trade (real display names)
+       Translates each item's `kind` -> KindDB[kind].name in-game, groups
+       by name + form, and posts quantities. Fires only when BOTH sides
+       confirmed (a real completion, not a cancel).
+=======================================================================]]
+local function http_post(url, body)
+    local req = (syn and syn.request) or (http and http.request) or http_request or request
+    if not req then log("no HTTP function (request) available") return end
+    pcall(function()
+        req({ Url = url, Method = "POST",
+              Headers = { ["Content-Type"] = "application/json" }, Body = body })
+    end)
+end
+
+local function pet_label(item)
+    local def  = KindDB and KindDB[item.kind]
+    local name = (def and def.name) or item.kind
+    local p    = item.properties or {}
+    local pre  = p.mega_neon and "Mega Neon " or (p.neon and "Neon " or "")
+    local tag  = ""
+    if p.rideable then tag = tag .. "R" end
+    if p.flyable  then tag = tag .. "F" end
+    if tag ~= "" then tag = " [" .. tag .. "]" end
+    return pre .. name .. tag
+end
+
+local function summarize(items)
+    local counts, order = {}, {}
+    for _, item in ipairs(items or {}) do
+        local lbl = pet_label(item)
+        if not counts[lbl] then order[#order+1] = lbl end
+        counts[lbl] = (counts[lbl] or 0) + 1
+    end
+    local lines = {}
+    for _, lbl in ipairs(order) do lines[#lines+1] = ("%dx %s"):format(counts[lbl], lbl) end
+    return lines, #(items or {})
+end
+
+local function send_trade_webhook(received, given, partner_name)
+    if not CONFIG.WEBHOOK.enabled or CONFIG.WEBHOOK.url == "" then return end
+    local fields = {}
+    local rep = CONFIG.WEBHOOK.report
+    if rep ~= "given" then
+        local lines, n = summarize(received)
+        fields[#fields+1] = { name = ("Received (%d)"):format(n),
+            value = (#lines>0 and table.concat(lines, "\n") or "nothing"), inline = false }
+    end
+    if rep == "given" or rep == "both" then
+        local lines, n = summarize(given)
+        fields[#fields+1] = { name = ("Given (%d)"):format(n),
+            value = (#lines>0 and table.concat(lines, "\n") or "nothing"), inline = false }
+    end
+    local payload = {
+        username = "ADM AutoTrade",
+        embeds = {{
+            title = "Trade complete",
+            description = partner_name and ("with **" .. partner_name .. "**") or nil,
+            color = 5763719,
+            fields = fields,
+            footer = { text = LocalPlayer.Name },
+        }},
+    }
+    local ok, body = pcall(function() return game:GetService("HttpService"):JSONEncode(payload) end)
+    if ok then http_post(CONFIG.WEBHOOK.url, body) log("webhook sent") end
+end
+
+
+local app_cache = nil
+local function get_trade_app()
+    if app_cache then return app_cache end
+    local ok, app = pcall(function() return UIManager.apps.TradeApp end)
+    if ok and app then app_cache = app patch_trade_app(app) return app end
+    return nil
+end
+
+local last_stage, last_fire = nil, 0
+local in_trade = false
+-- completion tracking for the webhook
+local completing = false
+local pending_received, pending_given, pending_partner = nil, nil, nil
+
+local function step_trade()
+    if not CONFIG.AUTO_ACCEPT.enabled then in_trade = false return end
+
+    local app = get_trade_app()
+    if not app then last_stage = nil in_trade = false return end
+
+    local state = app:_get_local_trade_state()
+    if not state then
+        if last_stage == "confirmation" then
+            if completing then
+                send_trade_webhook(pending_received, pending_given, pending_partner)
+            end
+            log("trade complete")
+        end
+        completing = false
+        pending_received, pending_given, pending_partner = nil, nil, nil
+        last_stage = nil
+        in_trade = false
+        return
+    end
+
+    in_trade = true
+    mark_activity()  -- pause idle watchdog while a trade is open
+
+    local stage = state.current_stage
+    if stage ~= last_stage then
+        log("stage:", stage)
+        last_stage = stage
+        last_fire = 0
+    end
+
+    -- detect real completion: both sides confirmed (cache items before close)
+    if stage == "confirmation" then
+        local mine    = app:_get_my_offer()
+        local partner = app:_get_partner_offer()
+        if mine and partner and mine.confirmed and partner.confirmed then
+            completing       = true
+            pending_received = partner.items
+            pending_given    = mine.items
+            local me   = LocalPlayer
+            local pp   = (state.sender == me) and state.recipient or state.sender
+            pending_partner = (typeof(pp) == "Instance" and pp.Name) or nil
+        end
+    end
+
+    if os.clock() - last_fire < CONFIG.AUTO_ACCEPT.refire_every then return end
+    last_fire = os.clock()
+
+    if stage == "negotiation" then
+        pcall(function() app:_on_accept_pressed() end)
+    elseif stage == "confirmation" then
+        pcall(function() app:_on_confirm_pressed() end)
+    end
+end
+
+--[[=====================================================================
+    6. IDLE WATCHDOG
+=======================================================================]]
+local watchdog_fired = false
+local function check_idle()
+    if not CONFIG.IDLE_WATCHDOG.enabled then return false end
+    if in_trade or watchdog_fired then return false end
+    if os.clock() - last_activity < CONFIG.IDLE_WATCHDOG.idle_seconds then return false end
+
+    watchdog_fired = true
+    if CONFIG.IDLE_WATCHDOG.mode == "kick" then
+        log("idle -> kick")
+        pcall(function() LocalPlayer:Kick("autotrade: idle") end)
+    else
+        log("idle -> rehop")
+        pcall(function() TeleportService:Teleport(game.PlaceId, LocalPlayer) end)
+    end
+    return true
+end
+
+--[[=====================================================================
+    7. MAIN LOOP
+=======================================================================]]
+log("starting | accept:", CONFIG.AUTO_ACCEPT.enabled,
+    "| settings:", CONFIG.FORCE_SETTINGS.enabled,
+    "| idle:", CONFIG.IDLE_WATCHDOG.enabled)
+
+force_trade_settings()
+
+if not CONFIG.AUTO_ACCEPT.enabled and not CONFIG.IDLE_WATCHDOG.enabled then
+    log("only settings enabled — done")
+    return
+end
+
+local hook_ok = false
+while true do
+    if CONFIG.AUTO_ACCEPT.enabled and not hook_ok then
+        hook_ok = install_accept_hook()
+        if hook_ok then
+            log("accept hook installed")
+            force_trade_settings()  -- re-assert after (re)install / rejoin
+        end
+    end
+
+    local ok, err = pcall(step_trade)
+    if not ok then log("step error:", err) end
+
+    if check_idle() then break end
+
+    task.wait(CONFIG.AUTO_ACCEPT.poll)
+end
