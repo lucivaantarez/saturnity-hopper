@@ -3,11 +3,6 @@
     For moving your own items between your own accounts.
 
     Everything is controlled from the CONFIG block below. Each feature has
---[[=====================================================================
-    adm_autotrade.lua  —  Adopt Me auto-trade (Delta)
-    For moving your own items between your own accounts.
-
-    Everything is controlled from the CONFIG block below. Each feature has
     its own on/off, plus a master on/off. Edit, push to GitHub, done.
 
     SECTIONS
@@ -165,27 +160,54 @@ local function install_accept_hook()
     pcall(function() load("MinigameForcedState").can_receive_invites = function() return true end end)
     pcall(function() load("TradeExcluder").is_player_excluded = function() return false end end)
 
-    -- (b) auto-answer the "trade_request" dialog with Accept
     local DialogApp = apps.DialogApp
     if not DialogApp then return false end
+
+    -- (b) hook the REAL dialog method. It lives on the CLASS (via metatable
+    -- __index), not the instance, and it returns a Promise (not a string).
+    -- For a trade_request we short-circuit with a resolved promise carrying
+    -- "Accept" — exactly what the waiting TradeApp handler expects.
     if not DialogApp.__autotrade_hooked then
-        local orig = DialogApp.dialog
-        DialogApp.dialog = function(self, opts)
-            if opts and opts.handle == "trade_request" then
-                mark_activity()
-                log("auto-accepting trade request dialog")
-                return "Accept"
+        local Promise = load("Promise")
+        local cls = getmetatable(DialogApp)
+        cls = cls and cls.__index
+        if cls and cls.dialog and Promise then
+            local orig = cls.dialog
+            cls.dialog = function(self, opts)
+                if opts and opts.handle == "trade_request" then
+                    mark_activity()
+                    log("auto-accepting trade request (hooked dialog)")
+                    local p = Promise.resolve("Accept")
+                    -- match the original's yields behaviour
+                    if opts.yields or opts.yields == nil then return p:expect() end
+                    return p
+                end
+                return orig(self, opts)
             end
-            return orig(self, opts)
+            DialogApp.__autotrade_hooked = true
         end
-        DialogApp.__autotrade_hooked = true
     end
 
     -- (c) neutralize suspicious-captcha, scam warnings, unbalanced warnings, etc.
     local TradeApp = apps.TradeApp
     if TradeApp then patch_trade_app(TradeApp) end
 
-    return true
+    return DialogApp.__autotrade_hooked == true
+end
+
+-- If a trade-request dialog is ALREADY on screen when we start (your bot
+-- sends before the script executes), the hook above only catches FUTURE
+-- dialogs. This force-answers the one already open by firing the dialog's
+-- own response signal with "Accept" for the current ticket.
+local function clear_open_request()
+    if not UIManager or not UIManager.apps then return end
+    local D = UIManager.apps.DialogApp
+    if not D or not D.is_dialog_open then return end
+    pcall(function()
+        -- the in-flight ticket is completed_ticket + 1; push "Accept" into it
+        D.force_response_signal:Fire(D.completed_ticket + 1, table.pack("Accept"))
+        log("force-answered already-open dialog")
+    end)
 end
 
 --[[=====================================================================
@@ -401,6 +423,9 @@ while true do
     if CONFIG.AUTO_ACCEPT.enabled and not hook_ready() then
         install_accept_hook()
     end
+
+    -- catch a trade-request dialog that was already open before we started
+    if CONFIG.AUTO_ACCEPT.enabled then clear_open_request() end
 
     -- force settings only after the hook is confirmed in
     if hook_ready() and not settings_done then
