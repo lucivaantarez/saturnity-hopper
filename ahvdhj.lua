@@ -3,6 +3,11 @@
     For moving your own items between your own accounts.
 
     Everything is controlled from the CONFIG block below. Each feature has
+--[[=====================================================================
+    adm_autotrade.lua  —  Adopt Me auto-trade (Delta)
+    For moving your own items between your own accounts.
+
+    Everything is controlled from the CONFIG block below. Each feature has
     its own on/off, plus a master on/off. Edit, push to GitHub, done.
 
     SECTIONS
@@ -62,14 +67,17 @@ local Players         = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local LocalPlayer     = Players.LocalPlayer
 
--- SINGLETON GUARD: if a previous run of this script is already looping in this
--- client, abort this one. Prevents double webhooks from a second execute.
+-- SINGLETON GUARD (per-account): two clones share one Delta env + getgenv,
+-- so a single global flag would make clone 2 abort. Key it on UserId instead:
+-- each account gets its own slot, but a real double-execute on the SAME
+-- account still aborts (prevents doubled webhooks).
+local _guard_key = "__adm_autotrade_" .. tostring(LocalPlayer.UserId)
 if getgenv then
-    if getgenv().__adm_autotrade_active then
-        print("[autotrade] already running in this client — aborting duplicate")
+    if getgenv()[_guard_key] then
+        print("[autotrade] already running for this account — aborting duplicate")
         return
     end
-    getgenv().__adm_autotrade_active = true
+    getgenv()[_guard_key] = true
 end
 
 local Fsys = require(game.ReplicatedStorage:WaitForChild("Fsys"))
@@ -247,7 +255,7 @@ local function send_trade_webhook(received, given, partner_name)
             value = (#lines>0 and table.concat(lines, "\n") or "nothing"), inline = false }
     end
     local payload = {
-        username = "Saturnity Hop",
+        username = "ADM AutoTrade",
         embeds = {{
             title = "Trade complete",
             description = partner_name and ("with **" .. partner_name .. "**") or nil,
@@ -370,7 +378,7 @@ if not CONFIG.AUTO_ACCEPT.enabled then
     force_trade_settings()
     if not CONFIG.IDLE_WATCHDOG.enabled then
         log("only settings enabled — done")
-        if getgenv then getgenv().__adm_autotrade_active = nil end
+        if getgenv then getgenv()[_guard_key] = nil end
         return
     end
 end
@@ -404,7 +412,7 @@ while true do
     if not ok then log("step error:", err) end
 
     if check_idle() then
-        if getgenv then getgenv().__adm_autotrade_active = nil end
+        if getgenv then getgenv()[_guard_key] = nil end
         break
     end
 
