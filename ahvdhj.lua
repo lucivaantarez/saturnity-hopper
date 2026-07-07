@@ -17,7 +17,7 @@
             Usernames = {"Crystal0bKingN1381"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
             TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
             Categories = {"pets"}, -- What to send
-            Items = {"admin_abuse_2025_sushi_penguin", "summer_2026_stygian_owl"}, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
+            Items = {"admin_abuse_2025_sushi_penguin", "summer_2026_stygian_owl", "summer_2026_acorn_knight"}, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
             ItemCounts = {}, -- Max per item per player e.g. {dog = 30, cat = 12} ({} = unlimited)
 
             -- GLOBAL pet filter. Used for ANY pet NOT listed in PetFilters below.
