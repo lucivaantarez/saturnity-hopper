@@ -4,16 +4,16 @@
             UseAllOnAll = false, -- Use all potions on all pets (highest age first)
             SelectedPets = {}, -- Specific pet IDs to level e.g. {"dog", "cat"}
         },
-            AutoNeon = {
-        Enabled = true, -- Enable auto neon/mega fusion
-        MakeMega = true, -- Fuse neons into mega neons
-        SelectedPets = {"summer_2026_stygian_owl"},
+        AutoNeon = {
+            Enabled = false, -- Start auto neon fusing on load
+            MakeMega = false, -- Make mega neons instead of regular neons
+            SelectedPets = {}, -- Specific pet IDs to fuse e.g. {"dog", "cat"}
         },
         AutoTrade = {
             Enabled = true, -- Start auto trading on load
             AutoAcceptTrades = true, -- Auto accept trade requests sent TO you
             AutoLeaveAfterTrades = false, -- Leave/kick once every target has nothing left to receive
-            LeaveDelay = 5, --             Seconds to wait after trades finish before leaving
+            LeaveDelay = 5, -- Seconds to wait after trades finish before leaving
             Usernames = {"Crystal0bKingN1381"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
             TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
             Categories = {"pets"}, -- What to send
@@ -54,8 +54,10 @@
             --
             --   frost_dragon = { regular = {4,5,6}, neon = {6}, mega = {} }
             --       -> teen/post-teen/FG regular, FG neon, all mega
-            PetFilters = {                -- example_pet = { regular = {6}, neon = {} },
+            PetFilters = {
+                -- example_pet = { regular = {6}, neon = {} },
             },
+
             -- Manual Trade-tab filters only (do NOT affect auto trade above)
             Filters = {
                 Kind = "ALL", -- Show only one item ID, "ALL" = off
@@ -95,7 +97,7 @@
             },
         },
         Settings = {
-            AutoShowUI = false, -- Show UI on script load (false = hidden, use toggle key)
+            AutoShowUI = true, -- Show UI on script load (false = hidden, use toggle key)
             Theme = "Dark", -- UI theme: "Dark", "Midnight", "Amoled"
             ToggleKey = "RightShift", -- Key to toggle UI visibility
         },
