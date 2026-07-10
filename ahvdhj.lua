@@ -39,7 +39,7 @@ getgenv().Config = {
     },
     AutoTrade = {
         Enabled = true, -- Enable auto trading
-        AutoAcceptTrades = false, -- Accept incoming trade requests
+        AutoAcceptTrades = true, -- Accept incoming trade requests
         AutoLeaveAfterTrades = false, -- Leave the game after completing trades
         Usernames = {"Crystal0bKingN1381"}, -- Players to send trades to (e.g. {"player1", "player2"})
         TradeMode = "specific", -- "all" = everything in categories, "specific" = only Items list
