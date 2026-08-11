@@ -56,7 +56,7 @@
             --
             --   frost_dragon = { regular = {4,5,6}, neon = {6}, mega = {} }
             --       -> teen/post-teen/FG regular, FG neon, all mega
-            PetFilters = {
+            PetFilters = { {birthday_2026_birthday_butterfly = {mega = {}}}, 
                 -- example_pet = { regular = {6}, neon = {} },
             },
 
