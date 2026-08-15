@@ -18,7 +18,6 @@
             TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
             Categories = {"pets", "toys", "pet_accessories"}, -- What to send
             Items = {
-"birthday_2026_birthday_butterfly",
 "admin_abuse_2025_sushi_penguin",
 "ice_dimension_2025_frostbite_bear",
 "gifthat_2026_chocolate_chip_bat_dragon_backpack",
