@@ -17,7 +17,21 @@
             Usernames = {"AquawYStarz199229", "AxelAce798", "Xz_Gamer2YEchozYSwit", "XzNightUROmegalzX199", "XzRogueX95DriftXzX19"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
             TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
             Categories = {"pets", "toys", "pet_accessories"}, -- What to send
-            Items = {"admin_abuse_2025_sushi_penguin", "ice_dimension_2025_frostbite_bear", "gifthat_2026_chocolate_chip_bat_dragon_backpack", "paint_2023_colored_hair_spray_sealer", "summer_2026_sheepdog", "2d_tuesdays_2025_box", "icey_aura", "admin_abuse_egg_2026_robot_chicken", "pet_recycler_2025_emberlight", "endangered_2026_silverback_gorilla", "penguins_2025_dango_penguins", "food_pets_2026_dragonfruit_fox", "what_the_fork_2026_chihuahua"}, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
+            Items = {
+            "admin_abuse_2025_sushi_penguin",
+            "ice_dimension_2025_frostbite_bear",
+            "gifthat_2026_chocolate_chip_bat_dragon_backpack",
+            "paint_2023_colored_hair_spray_sealer",
+            "2d_tuesdays_2025_box",
+            "admin_abuse_egg_2026_robot_chicken",
+            "pet_recycler_2025_emberlight",
+            "endangered_2026_silverback_gorilla",
+            "penguins_2025_dango_penguins",
+            "food_pets_2026_dragonfruit_fox",
+            "what_the_fork_2026_chihuahua",
+            "releaser_refresh_2026_strawberry_tortle",
+            "releaser_refresh_2026_kiwi_kiwi",
+            }, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
             ItemCounts = {}, -- Max per item per player e.g. {dog = 30, cat = 12} ({} = unlimited)
 
             -- GLOBAL pet filter. Used for ANY pet NOT listed in PetFilters below.
