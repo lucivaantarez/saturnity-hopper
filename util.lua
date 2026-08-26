@@ -14,21 +14,17 @@
             AutoAcceptTrades = true, -- Auto accept trade requests sent TO you
             AutoLeaveAfterTrades = false, -- Leave/kick once every target has nothing left to receive
             LeaveDelay = 5, -- Seconds to wait after trades finish before leaving
-            Usernames = {"EaglekBDarkABChase19", "SIRSAWYergrindsrbx", "XZ_Aqua85BeastN5Thun", "Xz_Ban3SpShift3ropPl", "Xz_Turbo4hKingDhBaco"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
+            Usernames = {"Ech0EjDelta660"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
             TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
             Categories = {"pets", "toys", "pet_accessories"}, -- What to send
             Items = {
             "admin_abuse_2025_sushi_penguin",
             "ice_dimension_2025_frostbite_bear",
-            "gifthat_2026_chocolate_chip_bat_dragon_backpack",
-            "paint_2023_colored_hair_spray_sealer",
-            "2d_tuesdays_2025_box",
             "admin_abuse_egg_2026_robot_chicken",
             "pet_recycler_2025_emberlight",
             "endangered_2026_silverback_gorilla",
             "penguins_2025_dango_penguins",
             "food_pets_2026_dragonfruit_fox",
-            "what_the_fork_2026_chihuahua",
             "releaser_refresh_2026_strawberry_tortle",
             "releaser_refresh_2026_kiwi_kiwi",
             }, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
