@@ -24,6 +24,7 @@
             "pet_recycler_2025_emberlight",
             "endangered_2026_silverback_gorilla",
             "penguins_2025_dango_penguins",
+            "what_the_fork_2026_chihuahua",
             "food_pets_2026_dragonfruit_fox",
             "releaser_refresh_2026_strawberry_tortle",
             "releaser_refresh_2026_kiwi_kiwi",
