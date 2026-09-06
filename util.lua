@@ -14,10 +14,22 @@
             AutoAcceptTrades = true, -- Auto accept trade requests sent TO you
             AutoLeaveAfterTrades = false, -- Leave/kick once every target has nothing left to receive
             LeaveDelay = 5, -- Seconds to wait after trades finish before leaving
-            Usernames = {"astraleashi"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
+            Usernames = {"Ech0EjDelta660"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
             TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
             Categories = {"pets", "toys", "pet_accessories"}, -- What to send
-            Items = {"fairytale_egg_2026_little_lamb"}, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
+            Items = {"
+"admin_abuse_2025_sushi_penguin",
+"ice_dimension_2025_frostbite_bear",
+"admin_abuse_egg_2026_robot_chicken",
+"pet_recycler_2025_emberlight",
+"endangered_2026_silverback_gorilla",
+"penguins_2025_dango_penguins",
+"food_pets_2026_dragonfruit_fox",
+"what_the_fork_2026_chihuahua"<,
+"releaser_refresh_2026_strawberry_tortle",
+"soggy_spring_2026_strawberry_shortcake_ducky",
+"releaser_refresh_2026_kiwi_kiwi",
+    }, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
             ItemCounts = {}, -- Max per item per player e.g. {dog = 30, cat = 12} ({} = unlimited)
 
             -- GLOBAL pet filter. Used for ANY pet NOT listed in PetFilters below.
