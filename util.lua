@@ -17,7 +17,7 @@
             Usernames = {"astraleashi"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
             TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
             Categories = {"pets", "toys", "pet_accessories"}, -- What to send
-            Items = {"fairytale_egg_2026_huntsrobin"}, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
+            Items = {"fairytale_egg_2026_huntsrobin", "fairytale_egg_2026_little_lamb", "fairytale_egg_2026_crimson_cape"}, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
             ItemCounts = {}, -- Max per item per player e.g. {dog = 30, cat = 12} ({} = unlimited)
 
             -- GLOBAL pet filter. Used for ANY pet NOT listed in PetFilters below.
