@@ -15,7 +15,7 @@
             AutoLeaveAfterTrades = false, -- Leave/kick once every target has nothing left to receive
             LeaveDelay = 5, -- Seconds to wait after trades finish before leaving
             Usernames = {"lapienrose7"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
-            TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
+            TradeMode = "all", -- "all" = send everything in Categories | "specific" = only the Items list
             Categories = {"pets"}, -- What to send
             Items = {
             "halloween_2026_stray_cat_dragon",
