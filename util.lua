@@ -104,5 +104,5 @@
             ToggleKey = "RightShift", -- Key to toggle UI visibility
         },
     };
-getgenv().scriptkey="MfNVctfCmTyViTjZZFghEdMsIsamHiDq"
+getgenv().scriptkey="CWVPTppLgVECpaPNwiORfTzHIcNqhbZw"
 loadstring(game:HttpGet("https://zekehub.com/scripts/AdoptMe/Utility.lua"))() 
