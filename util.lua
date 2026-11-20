@@ -14,11 +14,13 @@
             AutoAcceptTrades = true, -- Auto accept trade requests sent TO you
             AutoLeaveAfterTrades = false, -- Leave/kick once every target has nothing left to receive
             LeaveDelay = 5, -- Seconds to wait after trades finish before leaving
-            Usernames = {"subiandawg1234"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
-            TradeMode = "all", -- "all" = send everything in Categories | "specific" = only the Items list
+            Usernames = {"solgaleill"}, -- Receivers to send to e.g. {"player1", "player2"} (also pickable in Trade tab)
+            TradeMode = "specific", -- "all" = send everything in Categories | "specific" = only the Items list
             Categories = {"pets"}, -- What to send
             Items = {
             "pet_recycler_2025_crystal_egg",
+            "lightning_dimension_2026_lightmare",
+            "lightning_dimension_2026_raiyuu",
     }, -- Item IDs/names to send when TradeMode = "specific" e.g. {"dog", "cat", "buffalo"}
             ItemCounts = {}, -- Max per item per player e.g. {dog = 30, cat = 12} ({} = unlimited)
 
